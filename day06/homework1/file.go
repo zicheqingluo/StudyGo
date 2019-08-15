@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"path"
 	"os"
-	"strconv"
 	
 )
 
@@ -22,25 +21,20 @@ func (c *consoleLogger)FileInit(isFile bool,filePath,fileName string)(error){
 		return err
 	}
 	c.fileObj = fileObj
+	//初始化通道
 	c.ch = make(chan Ch1,10)
-	for j := 1; j<10;j++{
+	//线程池
+	for j := 1; j<2;j++{
 
-		go c.SaveFile()
+		go c.SaveFile() //启用单独的写文件线程
 	}
 	return nil
 }
 
 //检查当前时间是否为每分钟的00秒
 func (c *consoleLogger)checkTime()bool{
-	timef := time.Now().Format("200601021504") + "00"
-	checkTime,err := strconv.Atoi(timef)
-	nowTime, err := strconv.Atoi(time.Now().Format("20060102150405"))
-	if err != nil {
-		fmt.Printf("转换错误：%s",err)
-	}
-	//fmt.Printf("时间 %v %T,标志时间:%v %T \n",nowTime,nowTime,checkTime,checkTime)	
 
-	return checkTime == nowTime
+	return time.Now().Format("05") == "00"
 
 }
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 )
-
+//定义结构体
 type Ch1 struct {
 	msg *string
 	fo *os.File
@@ -21,7 +21,7 @@ type consoleLogger struct {
 	filePath	string
 	fileName	string
 	fileObj		*os.File
-	ch		chan Ch1
+	ch		chan Ch1  //定义Ch1类型的通道
 }
 //构造函数
 func NewConsoleLogger(level string) *consoleLogger{
@@ -57,9 +57,10 @@ func (c *consoleLogger)messageFormat(lv logLevel,message *string){
 				c.MoveFile()
 				}
 
-			ch2 := Ch1{&msg,c.fileObj,}
-			c.ch <- ch2
-			}
+        //将格式化好的日志内容和要写入文件的句柄放入通道，异步写入磁盘
+		ch2 := Ch1{&msg,c.fileObj,}
+		c.ch <- ch2
+		}
 
 			//fmt.Fprintf(c.fileObj,msg)
 
@@ -68,7 +69,7 @@ func (c *consoleLogger)messageFormat(lv logLevel,message *string){
 }
 }
 
-
+	//写文件线程，从通道中读取格式化好的日志内容和文件句柄。
 	func (c consoleLogger)SaveFile(){
 		for ch3 := range c.ch {
 			fo := ch3.fo
