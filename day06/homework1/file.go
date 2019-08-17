@@ -24,7 +24,7 @@ func (c *consoleLogger)FileInit(isFile bool,filePath,fileName string)(error){
 	//初始化通道
 	c.ch = make(chan Ch1,10)
 	//线程池
-	for j := 1; j<2;j++{
+	for j := 0; j<8;j++{
 
 		go c.SaveFile() //启用单独的写文件线程
 	}
