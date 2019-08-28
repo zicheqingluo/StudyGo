@@ -20,19 +20,28 @@ import (
 // }
 
 func TestBackToText(t *testing.T) {
-	type test []struct {
+	type test struct {
 		input string
 		want string
 	}
-	tests := test{
-		{input:"abcba",want:"是回文"},
-		{input:"上海",want:"不是回文"},
+	tests := map[string]test{
+		"test1":{input:"abc,';ba",want:"是回文"},
+		"test2":{input:"油灯少灯油",want:"是回文"},
 	}
-	for _,tc :=range tests {
-		got := BackToText(tc.input)
-		if got  != tc.want{
-			
- 		t.Errorf("not huiwen,want:%v,but %v",tc.want,got)
+	for name,tc :=range tests {
+		t.Run(name,func(t *testing.T){
+			got := BackToText(tc.input)
+			if got  != tc.want{
+				
+			 t.Errorf("not huiwen,want:%v,but %v",tc.want,got)
 		}
+		})
+		}
+	}
+
+
+func BenchmarkBackToText(b *testing.B){
+	for i:=0;i<b.N;i++{
+		BackToText("沙河有沙又有河")
 	}
 }
