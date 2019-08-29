@@ -25,7 +25,7 @@ func TestBackToText(t *testing.T) {
 		want string
 	}
 	tests := map[string]test{
-		"test1":{input:"abc,';ba",want:"是回文"},
+		"test1":{input:"abc,'ba",want:"是回文"},
 		"test2":{input:"油灯少灯油",want:"是回文"},
 	}
 	for name,tc :=range tests {
