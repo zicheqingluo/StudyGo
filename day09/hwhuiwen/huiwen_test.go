@@ -18,7 +18,7 @@ import (
 // 		t.Errorf("not huiwen,want:%v,but %v",want,got)
 // 	}
 // }
-
+//TestBackToText 单元测试
 func TestBackToText(t *testing.T) {
 	type test struct {
 		input string
@@ -39,7 +39,7 @@ func TestBackToText(t *testing.T) {
 		}
 	}
 
-
+//BenchmarkBackToText 基准测试
 func BenchmarkBackToText(b *testing.B){
 	for i:=0;i<b.N;i++{
 		BackToText("沙河有沙又有河")
