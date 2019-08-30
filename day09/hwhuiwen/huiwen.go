@@ -5,8 +5,7 @@ package hwhuiwen
 //BackToText 回文函数
 func BackToText(ss string) string {
 
-	//ss := "a山西运煤车煤运西山a"
-	bd := ",'"
+	bd := ",'" //忽略部分标点符号
 	var flag bool
 	
 	r := make([]rune,0,len(ss))
