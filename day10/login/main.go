@@ -8,8 +8,11 @@
 package main
 
 import (
+	//"bytes"
 	"encoding/json"
 	"fmt"
+	
+
 	"io/ioutil"
 	"net/http"
 	_ "net/http/pprof"
@@ -47,13 +50,17 @@ func login(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 		}
 		fmt.Println("result:", string(result))
+		//data := fmt.Sprintf("`%s`",result)
+		
+
 		r.Body.Close()
 		type Class struct {
-			Username int `json:"username"`
-			Password int `json:"password"`
+			username string 
+			password string 
 		}
 		var res Class
-		err = json.Unmarshal(result, &res)
+		s1 := `{"username":"111","password":"2222"}`
+		err = json.Unmarshal([]byte(s1), &res)
 		if err != nil {
 			fmt.Println("err:", err)
 		}

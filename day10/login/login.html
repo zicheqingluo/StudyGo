@@ -56,13 +56,19 @@
         function bindLogin() {
             $('#submit').click(function () {
                 var $msg = $('#error_msg');
+                var formObject = {};
+                var formArray = $("#fm").serializeArray()
+                $.each(formArray,function(i,item){
+                    formObject[item.name] = item.value;
+                });
                 $msg.parent().addClass('hide');
+                console.log(formArray)
                 $.ajax({
                     url: '/login/',
                     type: 'POST',
                     contentType: "application/json; charset=utf-8",
                     //data: $('#fm').serialize(),
-                    data: ('#fm').serializeArray(),
+                    data: JSON.stringify(formObject),
                     dataType: 'JSON',
                     success: function (arg) {
                         if(arg.status){
