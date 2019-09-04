@@ -2,7 +2,7 @@
  * @Author: yangxiaokang
  * @Date: 2019-09-03 14:43:31
  * @Last Modified by: yangxiaokang
- * @Last Modified time: 2019-09-03 19:11:26
+ * @Last Modified time: 2019-09-04 18:31:23
  */
 
 package main
@@ -11,11 +11,12 @@ import (
 	//"bytes"
 	"encoding/json"
 	"fmt"
-	
 
 	"io/ioutil"
 	"net/http"
 	_ "net/http/pprof"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func static(w http.ResponseWriter, r *http.Request) {
@@ -44,38 +45,31 @@ func login(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Write(b)
 	} else if r.Method == "POST" {
-		//fmt.Println(ioutil.ReadAll(r.Body)) // 我在服务端打印客户端发来的请求的body
 		result, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println("result:", string(result))
-		//data := fmt.Sprintf("`%s`",result)
-		
-
 		r.Body.Close()
-		type Class struct {
-			username string 
-			password string 
+		type User struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
 		}
-		var res Class
-		s1 := `{"username":"111","password":"2222"}`
-		err = json.Unmarshal([]byte(s1), &res)
+
+		r1 := &User{}
+
+		err = json.Unmarshal([]byte(result), r1)
 		if err != nil {
 			fmt.Println("err:", err)
 		}
-		fmt.Println("res:", res)
+		fmt.Println("res:", string(r1.Password), r1.Username)
 		w.Write([]byte("ok"))
 	}
-
-	//fmt.Println(r.Method)
 
 }
 
 func main() {
 
 	http.HandleFunc("/login/", login)
-	//http.HandleFunc("/static/", static)
 	http.Handle("/static/", http.FileServer(http.Dir(".")))
 	http.ListenAndServe("0.0.0.0:9090", nil)
 }
