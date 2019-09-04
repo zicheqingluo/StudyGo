@@ -11,9 +11,9 @@
 <body>
 <div class="login">
     <div style="font-size: 25px; font-weight: bold;text-align: center;">
-        用户登陆
+        用户注册
     </div>
-    <form id="fm" method="POST" action="/login.html">
+    <form id="fm" method="POST" action="#">
       
         <div class="form-group">
             <label for="username">用户名</label>
@@ -23,8 +23,11 @@
             <label for="password">密码</label>
             <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码">
         </div>
- 
-        <div class="checkbox">
+        <div class="form-group">
+            <label for="age">年龄</label>
+            <input type="text" class="form-control" name="age" id="age" placeholder="请输入年龄">
+        </div> 
+        <!-- <div class="checkbox">
             <label>
                 <input type="checkbox" value="1" name="rmb"> 一个月内自动登陆
             </label>
@@ -32,10 +35,11 @@
             <div class="right">
                 <a href="#">忘记密码？</a>
             </div>
-        </div>
+        </div> -->
         <div class="row">
             <div class="col-xs-3">
-                <a id="submit" class="btn btn-default">登 陆</a>
+                <a id="submit" class="btn btn-default btn-lg active">注 册</a>
+                <!-- <a id="submit" class="btn btn-default">注 册</a> -->
             </div>
             <div class="col-xs-9" style="padding-left: 0;">
                 <div class="alert alert-danger hide">
@@ -57,27 +61,28 @@
             $('#submit').click(function () {
                 var $msg = $('#error_msg');
                 var formObject = {};
-                var formArray = $("#fm").serializeArray()
+                var formArray = $("#fm").serializeArray() //获取到form表单数组
                 $.each(formArray,function(i,item){
-                    formObject[item.name] = item.value;
+                    formObject[item.name] = item.value; //将form表单数组的key value加入到fromobject
                 });
                 $msg.parent().addClass('hide');
-                console.log(formArray)
                 $.ajax({
-                    url: '/login/',
+                    url: '/register/',
                     type: 'POST',
-                    contentType: "application/json; charset=utf-8",
+                    contentType: "application/json; charset=utf-8", //指定json类型与字符编码
                     //data: $('#fm').serialize(),
-                    data: JSON.stringify(formObject),
+                    data: JSON.stringify(formObject), //将form对象以json字符串格式发送
                     dataType: 'JSON',
                     success: function (arg) {
                         if(arg.status){
-                            location.href = '/'
-                            alert(status)
-                            console.log(status)
+                            //location.href = '/'
+                            alert(arg.info)
+                            console.log(arg.info)
                         }else{
-                            $msg.parent().removeClass('hide');
-                            $msg.text(arg.message);
+                            alert(arg.info)
+                            console.log(arg.status)
+                            // $msg.parent().removeClass('hide');
+                            // $msg.text(arg.message);
                             
                             
                         }

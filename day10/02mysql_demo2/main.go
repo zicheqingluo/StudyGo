@@ -37,7 +37,7 @@ type user struct{
 func queryOne(){
 	var u1 user
 	//1.单条语句查询
-	sqlStr := `select id,name,age from user where id=?;`
+	sqlStr := `select id,name,age from user where name="suolong111";`
 	//2.执行语句
 	// for i:=0;i<13;i++{
 
@@ -45,7 +45,10 @@ func queryOne(){
 	// 	fmt.Printf("建立第%v个链接\n",i)
 
 	// }
-		db.QueryRow(sqlStr,2).Scan(&u1.id,&u1.name,&u1.age)
+		err := db.QueryRow(sqlStr).Scan(&u1.id,&u1.name,&u1.age)
+		if err != nil {
+			fmt.Println(err)
+		}
 	//3.拿结果
 
 	//rowObj.Scan(&u1.id,&u1.name,&u1.age)  //不调用scan会一直建立链接
@@ -146,12 +149,12 @@ func main() {
 	if err != nil {
 		fmt.Println("链接错误",err)
 	}
-
+	queryOne()
 	//queryMore(0)
 	//insert()
 	//updateRow(100,1)
 	//deleteRow(1)
-	prepareInsert()
+	//prepareInsert()
 
 
 
