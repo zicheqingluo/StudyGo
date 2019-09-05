@@ -53,7 +53,6 @@ func queryOne(username string) error{
 	err := db.QueryRow(sqlStr,username).Scan(&u1.id,&u1.name)
 	if err != nil{
 
-		fmt.Printf("数据已存在:%#v \n",u1)
 		return err
 	}
 	return nil
