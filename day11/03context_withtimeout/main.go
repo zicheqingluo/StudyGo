@@ -29,7 +29,8 @@ func worker(ctx context.Context) {
 func main() {
 	//设置50毫秒超时
 	ctx,_ := context.WithTimeout(context.Background(),time.Millisecond * 50)
-	
+	// d := time.Now().Add(50 * time.Millisecond)
+	// ctx, _ := context.WithDeadline(context.Background(), d)	
 	wg.Add(1)
 	go worker(ctx)
 	time.Sleep(time.Second * 5)

@@ -7,16 +7,20 @@ import (
 	"time"
 )
 	var wg sync.WaitGroup
-	var notify bool
+	var exitChan = make(chan bool,1)
 
 func f() {
 	defer wg.Done()
+LOOP:
 	for {
 
 	fmt.Println("suolong")
 	time.Sleep(time.Millisecond * 500)
-	if notify {
-		break
+	select {
+	case <-exitChan:
+		break LOOP
+	default:
+
 	}
 	}
 }
@@ -26,6 +30,6 @@ func main() {
 	wg.Add(1)
 	go f()
 	time.Sleep(time.Second * 5)
-	notify = true
+	exitChan <- true
 	wg.Wait()
 }
