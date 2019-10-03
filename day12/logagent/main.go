@@ -1,13 +1,15 @@
 package main
 
 import (
+	"sync"
 	"studygo/day12/logagent/conf"
 	"fmt"
-	"studygo/day12/logagent/kafka"
-	//"studygo/day12/logagent/taillog"
+	"studygo/day12/logagent/kafka"	
+	"studygo/day12/logagent/taillog"
 	"studygo/day12/logagent/etcd"
 	"time"
 	"gopkg.in/ini.v1"
+
 )
 
 var (
@@ -39,7 +41,7 @@ func main() {
 	}
 
 	//1.初始化kafka链接
-	err = kafka.Init([]string{cfg.KafkaConf.Address})
+	err = kafka.Init([]string{cfg.KafkaConf.Address},cfg.KafkaConf.ChanMaxSize)
 	if err != nil {
 		fmt.Printf("init kafka failed,err:%v \n", err)
 		return
@@ -64,8 +66,20 @@ func main() {
 	for _,v := range logEntryConf{
 		fmt.Println(v)
 	}
+
+
 	//2.2派一个哨兵监视日志收集项的变化，有变化及时通知logagent实现热加载配置
 
+// 3.手机日志发往kafka
+
+	taillog.Init(logEntryConf)
+	newConfChan := taillog.NewConfChan()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go etcd.WatchConf(cfg.EtcdConf.Key,newConfChan)
+	wg.Wait()
+
+	// 3.2发往kafka
 	//2.打开日志文件准备收集日志
 	//err = taillog.Init("./my.log")
 	// err = taillog.Init(cfg.TaillogConf.FileName)

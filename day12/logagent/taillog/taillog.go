@@ -3,6 +3,7 @@ package taillog
 import (
 	"fmt"
 	"github.com/hpcloud/tail"
+	"studygo/day12/logagent/kafka"
 )
 
 // 专门从日志文件收集日志的模块
@@ -12,7 +13,22 @@ var (
 	LogChan chan string
 )
 
-func Init(fileName string) (err error) {
+type TailTask struct {
+	path string
+	topic string
+	instance *tail.Tail
+}
+
+func NewTailTask(path,topic string) (tailObj *TailTask){
+	tailObj = &TailTask{
+		path : path,
+		topic: topic,
+	}
+	tailObj.Init() //根据路径打开对应的日志
+	return
+}
+
+func (t *TailTask)Init() () {
 	config := tail.Config{
 		ReOpen:    true,                                 // 重新打开
 		Follow:    true,                                 // 是否跟随
@@ -20,14 +36,25 @@ func Init(fileName string) (err error) {
 		MustExist: false,                                // 文件不存在不报错
 		Poll:      true,
 	}
-	tailObj, err = tail.TailFile(fileName, config)
+	var err error
+	t.instance, err = tail.TailFile(t.path, config)
 	if err != nil {
 		fmt.Println("tail file failed, err:", err)
 		return
 	}
-	return
+	go t.run() //采集日志
 }
 
-func ReadChan() <-chan *tail.Line {
-	return tailObj.Lines
+func (t *TailTask)run(){
+	for {
+
+		select {
+			
+		case line:= <- t.instance.Lines:
+				kafka.SendToChan(t.topic,line.Text)
+			
+		}
+	}
 }
+
+

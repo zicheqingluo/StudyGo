@@ -23,8 +23,7 @@ if err != nil {
 	// put
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	//val := `[{"path":"/home/yxk/te/nginx.log","topic":"web_log"},{"path":"/home/yxk/te/redis.log","topic":"redis_log"},{"path":"/home/yxk/te/mysql.log","topic":"mysql_log"}]`
-	val := `[{"path":"/home/yxk/te/nginx.log","topic":"web_log"},{"path":"/home/yxk/te/redis.log","topic":"redis_log"}]
-	`
+	val := `[{"path":"/home/yxk/te/nginx.log","topic":"web_log"},{"path":"/home/yxk/te/redis.log","topic":"redis_log"}]`
 	_, err = cli.Put(ctx, "/logagent/collect_config", val)
 	cancel()
 	if err != nil {

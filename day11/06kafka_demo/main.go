@@ -23,6 +23,7 @@ func main() {
 		fmt.Println("producer closed, err:", err)
 		return
 	}
+	fmt.Println("链接成功")
 	defer client.Close()
 	// 发送消息
 	pid, offset, err := client.SendMessage(msg)
