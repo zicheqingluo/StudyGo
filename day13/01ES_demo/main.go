@@ -22,16 +22,15 @@ func main(){
 
 	p1 := student{Name:"suolong",Age:21,Married:false}
 
-	put1,err := client.Index().
+	_,err = client.Index().
 		Index("user").
-		Type("go").
 		BodyJson(p1).
 		Do(context.Background())
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("indexed user %s to index %s ,type %s\n",put1.Id,put1.Index,put1.Type)
+	//fmt.Printf("indexed user %s to index %s ,type %s\n",put1.Id,put1.Index,put1.Type)
 
 
 
