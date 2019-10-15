@@ -14,7 +14,8 @@ type student struct{
 
 func main(){
 	//1.初始化链接得到一个client
-	client,err := elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"))
+	//client,err := elastic.NewClient(elastic.SetURL("http://127.0.0.1:9200"))
+	client,err := elastic.NewClient(elastic.SetURL("http://10.129.60.211:32147"))
 	if err != nil {
 		panic(err)
 	}
