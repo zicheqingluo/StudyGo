@@ -16,12 +16,30 @@ func main() {
 
   request.StartTime = "1567267200000"
   request.EndTime = "1569859200000"
-  request.PageSize = requests.NewInteger(100)
+  request.PageSize = requests.NewInteger(1)
   
 
 	response, err := client.DescribeAlertHistoryList(request)
 	if err != nil {
 		fmt.Print(err.Error())
 	}
-	fmt.Printf("response is %T\n", response)
+	fmt.Printf("response is %v\n", response)
+
+	type AlarmHistory struct {
+
+	}
+
+	type AlarmHistoryList struct {
+		AlarmHistory	AlarmHistory
+
+	}
+
+	type  res_data struct {
+		AlarmHistoryList AlarmHistoryList 
+		RequestID	string
+		Success	bool
+		Code	string 
+		Total	int 
+	}
+
 }
