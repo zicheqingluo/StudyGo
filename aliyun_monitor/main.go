@@ -98,7 +98,7 @@ func main() {
 	if err != nil {
 		fmt.Println("json unmarshal err:",err)
 	}
-	fmt.Println(Data.Total)
+	fmt.Printf("%#v",Data)
 
 
 }
