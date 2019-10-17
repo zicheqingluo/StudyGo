@@ -45,4 +45,17 @@ func main() {
 		return
 	}
 	fmt.Printf("%#v\n", c1)
+
+	var d1 map[string]int
+	d1 = make(map[string]int)
+	d1["abc"] = 1
+	v,ok := d1["abc"]
+	if ok{
+		fmt.Println("存在")
+		
+	}else{
+		fmt.Println("不存在")
+	}
+	fmt.Println(d1)	
+
 }
