@@ -1,4 +1,4 @@
-module StudyGo/day14/book
+module studygo/day14/book
 
 go 1.13
 
