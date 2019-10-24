@@ -15,7 +15,6 @@ type Book struct{
 	Title string
 	Price int
 }
-var BookList []Book
 
 func InitDB() (err error) {
 	//数据库信息
@@ -50,7 +49,8 @@ func Insert(title ,price string) {
 }
 
 func QueryMore(n int)[]Book {
-	//BookList:= make([]Book,)
+	//BookList:= make([]Book,100)
+	var BookList []Book
 
 	sqlStr :=`select id,title,price from book where id>?;` 
 	
