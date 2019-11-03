@@ -22,7 +22,7 @@ func NewSession(conn net.Conn) *Session{
 //向连接中写数据
 func (s *Session)Write(data []byte) error {
 	//定义写数据的格式,4字节的头部+可变体的长度
-buf := make([]byte,4+len(data))
+	buf := make([]byte,4+len(data))
 	//写入头部，记录数据长度
 	
 
