@@ -49,6 +49,7 @@ func GetArticleDetail(articleID int64)(articleDetail *model.ArticleDetail,err er
 	if articleID < 0{
 		return
 	}
+	articleDetail = &model.ArticleDetail{}
 	sqlstr := `select
 	id,summary,title,view_count,content,create_time,comment_count,username,category_id
 from

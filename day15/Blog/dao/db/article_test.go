@@ -33,3 +33,19 @@ func TestInsertArticle(t *testing.T) {
 	t.Logf("articleID: %d \n", articleID)
 
 }
+
+func TestGetAricleList(t *testing.T){
+	articleList,err := GetAricleList(1,15)
+	if err != nil {
+		return
+	}
+	t.Logf("article:%d \n",len(articleList))
+}
+
+func TestGetArticleDetail(t *testing.T) {
+	ar,err := GetArticleDetail(1)
+	if err != nil {
+		return
+	}
+	t.Logf("article:%#v \n",ar)
+}
