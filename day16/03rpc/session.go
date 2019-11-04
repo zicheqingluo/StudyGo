@@ -25,4 +25,6 @@ func (s *Session)Write(data []byte) error {
 	buf := make([]byte,4+len(data))
 	//写入头部，记录数据长度
 	
+
+
 }
