@@ -1,15 +1,14 @@
 package main
 
 import (
-	"sync"
-	"studygo/day12/logagent/conf"
 	"fmt"
-	"studygo/day12/logagent/kafka"	
-	"studygo/day12/logagent/taillog"
-	"studygo/day12/logagent/etcd"
-	"time"
 	"gopkg.in/ini.v1"
-
+	"studygo/day12/logagent/conf"
+	"studygo/day12/logagent/etcd"
+	"studygo/day12/logagent/kafka"
+	"studygo/day12/logagent/taillog"
+	"sync"
+	"time"
 )
 
 var (
@@ -34,14 +33,14 @@ var (
 func main() {
 	//0.加载配置文件
 
-	err := ini.MapTo(cfg,"./conf/config.ini")
+	err := ini.MapTo(cfg, "./conf/config.ini")
 	if err != nil {
-		fmt.Println("init kafka failed",err)
+		fmt.Println("init kafka failed", err)
 		return
 	}
 
 	//1.初始化kafka链接
-	err = kafka.Init([]string{cfg.KafkaConf.Address},cfg.KafkaConf.ChanMaxSize)
+	err = kafka.Init([]string{cfg.KafkaConf.Address}, cfg.KafkaConf.ChanMaxSize)
 	if err != nil {
 		fmt.Printf("init kafka failed,err:%v \n", err)
 		return
@@ -49,34 +48,33 @@ func main() {
 
 	fmt.Println("init kafka secuss...")
 	//2.初始化etcd
-	err = etcd.Init(cfg.EtcdConf.Address,time.Duration(cfg.EtcdConf.Timeout) * time.Second)
+	err = etcd.Init(cfg.EtcdConf.Address, time.Duration(cfg.EtcdConf.Timeout)*time.Second)
 	if err != nil {
-		fmt.Println("init etcd failed",err)
+		fmt.Println("init etcd failed", err)
 		return
 	}
 
 	fmt.Println("init etcd success...")
 	//2.1从etcd中获取日志收集项的配置信息
-	logEntryConf,err := etcd.GetConf(cfg.EtcdConf.Key)
+	logEntryConf, err := etcd.GetConf(cfg.EtcdConf.Key)
 	if err != nil {
-		fmt.Printf("从etcd中获取配置失败GetConf %v \n",err)
+		fmt.Printf("从etcd中获取配置失败GetConf %v \n", err)
 		return
 	}
-	fmt.Println("get conf from etcd success,%v \n",logEntryConf)
-	for _,v := range logEntryConf{
+	fmt.Println("get conf from etcd success,%v \n", logEntryConf)
+	for _, v := range logEntryConf {
 		fmt.Println(v)
 	}
 
-
 	//2.2派一个哨兵监视日志收集项的变化，有变化及时通知logagent实现热加载配置
 
-// 3.手机日志发往kafka
+	// 3.手机日志发往kafka
 
 	taillog.Init(logEntryConf)
 	newConfChan := taillog.NewConfChan()
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go etcd.WatchConf(cfg.EtcdConf.Key,newConfChan)
+	go etcd.WatchConf(cfg.EtcdConf.Key, newConfChan)
 	wg.Wait()
 
 	// 3.2发往kafka
