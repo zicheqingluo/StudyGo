@@ -21,5 +21,6 @@ func main(){
 	router.LoadHTMLGlob("views/*")
 	router.GET("/",controller.IndexHandle)
 	router.GET("/category/",controller.CategoryList)
+	router.GET("/article/detail/",controller.ArticleDetail)
 	_ = router.Run(":8000")
 }

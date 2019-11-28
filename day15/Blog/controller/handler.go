@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"studygo/day15/Blog/service"
 	"github.com/gin-gonic/gin"
+	"fmt"
 )
 
 //访问主页的控制器
@@ -51,4 +52,19 @@ func CategoryList(c *gin.Context){
 		"category_list":categoryList,
 	})
 
+}
+
+//ArticleDetail 文章评论
+func ArticleDetail(c *gin.Context){
+	articleIdStr := c.Query("article_id")
+	articleId,err := strconv.ParseInt(articleIdStr,10,64)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+		return
+	}
+
+	commentList,err := service.GetCommentList(articleId)
+	if err != nil {
+		fmt.Printf("get comment list failed,err:%v\n",err)
+	}
 }
