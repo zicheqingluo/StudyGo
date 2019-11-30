@@ -64,17 +64,17 @@ window.onload = function ()
     <div class="share"> </div>
     <div class="nextinfo">
       <p>上一篇：
-        {{if eq .prev.ArticleId -1}}
+        {{if eq .prev.Id -1}}
         没有上一篇文章了
         {{else}}
-        <a href="/article/detail/?article_id={{.prev.ArticleId}}">{{.prev.Title}}</a>
+        <a href="/article/detail/?article_id={{.prev.Id}}">{{.prev.Title}}</a>
         {{end}}
       </p>
       <p>下一篇：
-          {{if eq .next.ArticleId -1}}
+          {{if eq .next.Id -1}}
           没有下一篇文章了
           {{else}}
-          <a href="/article/detail/?article_id={{.next.ArticleId}}">{{.next.Title}}</a>
+          <a href="/article/detail/?article_id={{.next.Id}}">{{.next.Title}}</a>
           {{end}}
       </p>
     </div>
@@ -83,7 +83,7 @@ window.onload = function ()
       
       <ul>
         {{range .relative_article}}
-        <li><a href="/article/detail/?article_id={{.ArticleId}}" title="{{.Title}}">{{.Title}}</a></li>
+        <li><a href="/article/detail/?article_id={{.Id}}" title="{{.Title}}">{{.Title}}</a></li>
         {{end}}
       </ul>
     </div>

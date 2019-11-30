@@ -7,7 +7,7 @@ import (
 //ArticleInfo 定义文章结构体,首页
 type ArticleInfo struct {
 	Id         int64 `db:"id"`
-	CategoryID int64 `db:"category_id"` //文章分类id
+	CategoryId int64 `db:"category_id"` //文章分类id
 	Summary	string `db:"summary"` //文章摘要
 	Title string 	`db:"title"` //文章标题
 	ViewCount uint32	`db:"view_count"` //阅读次数

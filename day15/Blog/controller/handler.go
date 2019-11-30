@@ -62,9 +62,55 @@ func ArticleDetail(c *gin.Context){
 		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
 		return
 	}
-
+	//获取评论详情
 	commentList,err := service.GetCommentList(articleId)
 	if err != nil {
 		fmt.Printf("get comment list failed,err:%v\n",err)
 	}
+
+	//获取文章详情
+	articleDetail,err := service.GetArticleById(articleId)
+	if err != nil {
+		fmt.Printf("get article detail failed,err:%v\n",err)
+	}
+
+	//获取上一篇文章
+	prev,err := service.GetPrevArticle(articleId)
+	if err != nil {
+		fmt.Printf("get prev detail failed,err:%v\n",err)
+	}
+
+	//获取下一篇文章
+	next,err := service.GetNextArticle(articleId)
+	if err != nil {
+		fmt.Printf("get next detail failed,err:%v\n",err)
+	}
+
+	//获取相关文章
+	categoryId,err := service.GetCategoryId(articleId)
+	if err != nil {
+		fmt.Printf("get  categoryid failed,err:%v\n",err)
+	}
+
+	relativeArticle,err := service.GetArticleRecordListBYID(int(categoryId),0,100)
+	if err != nil {
+		fmt.Printf("get  detail failed,err:%v\n",err)
+	}
+
+	//获取分类数据
+	categoryList,err := service.GetALLCategoryList()
+
+	if err != nil {
+		fmt.Printf("get  categoryList failed,err:%v\n",err)
+	}
+	
+
+	c.HTML(http.StatusOK,"views/detail.html",gin.H{
+		"comment_list":commentList,
+		"detail":articleDetail,
+		"prev":prev,
+		"next":next,
+		"relative_article":relativeArticle,
+		"category":categoryList,
+	})
 }

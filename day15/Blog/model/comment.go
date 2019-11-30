@@ -6,8 +6,9 @@ import "time"
 type CommentInfo struct{
 	Id	int64 `db:"id"`
 	Username string	`db:"username"`
-	CreateTime time.Time 	`db:""create_time`
+	CreateTime time.Time 	`db:"create_time"`
 	Content string	`db:"content"`
 	Status	int64	`db:"status"`
-	articleId int64 	`db:"article_id"`
+	ArticleId int64 `db:"article_id"`
+	
 }
