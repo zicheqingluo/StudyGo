@@ -4,6 +4,8 @@ import (
 	"studygo/day15/Blog/model"
 
 	_ "github.com/go-sql-driver/mysql"
+
+	"database/sql"
 )
 
 //InsertArticle 插入文章
@@ -97,5 +99,21 @@ and
 status = 1
 `
 	err = DB.Get(articleDetail, sqlstr, articleID)
+	return
+}
+
+//判断文章是否存在
+func IsArticleExit(articleId int64)(exists bool,err error){
+	var id int64
+	sqlstr := "select id from article where id=?"
+	err = DB.Get(&id,sqlstr,articleId)
+	if err == sql.ErrNoRows {
+		exists = false
+		return
+	}
+	if err != nil{
+		return
+	}
+	exists = true
 	return
 }

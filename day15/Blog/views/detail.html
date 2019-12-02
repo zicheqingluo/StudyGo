@@ -54,7 +54,7 @@ window.onload = function ()
           <a href="mailto:dancesmiling@qq.com">{{.detail.Username}}</a>
         </span><span class="au02">{{.detail.CreateTime}}</span>
            <span class="au03">共<b>
-             <script >
+             <script src="/view/add_count/?article_id={{.Id}}}">
              </script>{{.detail.ViewCount}}</b>人围观</span>
              </div>
       
@@ -167,7 +167,7 @@ window.onload = function ()
 <footer>
   <p>Design by <a href="/">XXX个人博客</a></p>
 </footer>
-<script src="js/nav.js"></script>
+<script src="js/nav.js"></script> 
 <script type="text/javascript">
 jQuery.noConflict();
 jQuery(function() { 

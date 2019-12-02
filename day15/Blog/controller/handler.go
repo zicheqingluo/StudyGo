@@ -112,5 +112,29 @@ func ArticleDetail(c *gin.Context){
 		"next":next,
 		"relative_article":relativeArticle,
 		"category":categoryList,
+		"article_id": articleId,
 	})
+}
+
+//增加评论
+func CommentSubmit(c *gin.Context)(){
+	fmt.Println("postform:",c.PostForm(""))
+	comment := c.PostForm("comment")
+	author := c.PostForm("author")
+	articleIdStr := c.PostForm("article_id")
+	articleId,err := strconv.ParseInt(articleIdStr,10,64)
+	if err != nil {
+		fmt.Println("strconv :",err)
+		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+		return
+	}
+	err = service.InsertComment(author,&comment,articleId)
+	if err != nil {
+		fmt.Println("service :",err)
+		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+		return
+	}
+	url := fmt.Sprintf("/article/detail/?article_id=%d",articleId)
+	c.Redirect(http.StatusMovedPermanently,url)
+
 }
