@@ -91,6 +91,7 @@ func ArticleDetail(c *gin.Context){
 	if err != nil {
 		fmt.Printf("get  categoryid failed,err:%v\n",err)
 	}
+	fmt.Println("分类id:",categoryId)
 
 	relativeArticle,err := service.GetArticleRecordListBYID(int(categoryId),0,100)
 	if err != nil {
@@ -118,13 +119,11 @@ func ArticleDetail(c *gin.Context){
 
 //增加评论
 func CommentSubmit(c *gin.Context)(){
-	fmt.Println("postform:",c.PostForm(""))
 	comment := c.PostForm("comment")
 	author := c.PostForm("author")
 	articleIdStr := c.PostForm("article_id")
 	articleId,err := strconv.ParseInt(articleIdStr,10,64)
 	if err != nil {
-		fmt.Println("strconv :",err)
 		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
 		return
 	}
