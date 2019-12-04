@@ -23,5 +23,7 @@ func main(){
 	router.GET("/category/",controller.CategoryList)
 	router.GET("/article/detail/",controller.ArticleDetail)
 	router.POST("/comment/submit/",controller.CommentSubmit)
+	router.GET("/article/new/",controller.NewArticle)
+	router.POST("/article/submit/",controller.ArticleSubmit)
 	_ = router.Run(":8000")
 }

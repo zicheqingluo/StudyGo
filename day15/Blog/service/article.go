@@ -1,6 +1,7 @@
 package service
 
 import (
+	"strconv"
 	"studygo/day15/Blog/dao/db"
 	"studygo/day15/Blog/model"
 )
@@ -121,7 +122,6 @@ func GetPrevArticle(articleId int64) (articleDetail *model.ArticleDetail, err er
 	return
 }
 
-
 //getArticleById 根据文章id查询上一篇文章
 func GetNextArticle(articleId int64) (articleDetail *model.ArticleDetail, err error) {
 	nextId := articleId + int64(1)
@@ -137,12 +137,37 @@ func GetNextArticle(articleId int64) (articleDetail *model.ArticleDetail, err er
 }
 
 // 根据文章id获取对应的分类id
-func GetCategoryId(articleId int64) (int64,error){
+func GetCategoryId(articleId int64) (int64, error) {
 
-	articleDetail,err := db.GetArticleCategoryId(articleId)
-	if err != nil{
-		return 0,err
+	articleDetail, err := db.GetArticleCategoryId(articleId)
+	if err != nil {
+		return 0, err
 	}
 	categoryId := articleDetail.ArticleInfo.CategoryId
-	return categoryId,err
+	return categoryId, err
+}
+
+func CreateArticle(author, content, title, categoryIdStr string) (int64, error) {
+
+	categoryId, err := strconv.ParseInt(categoryIdStr, 10, 64)
+	if err != nil {
+		return categoryId, err
+	}
+	a := &model.ArticleDetail{
+		Content: content,
+		ArticleInfo: model.ArticleInfo{
+			Summary:      "",
+			Title:        title,
+			Username:     author,
+			CategoryId:   categoryId,
+			ViewCount:    0,
+			CommentCount: 0,
+		},
+	}
+	articleId, err := db.InsertArticle(a)
+	if err != nil {
+		return articleId, err
+	}
+	return articleId, err
+
 }

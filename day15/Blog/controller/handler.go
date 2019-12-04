@@ -1,139 +1,163 @@
 package controller
 
 import (
-	"strconv"
-	"net/http"
-	"studygo/day15/Blog/service"
-	"github.com/gin-gonic/gin"
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+	"studygo/day15/Blog/service"
 )
 
 //访问主页的控制器
-func IndexHandle(c *gin.Context){
+func IndexHandle(c *gin.Context) {
 	//从service取数据
-	articleRecordList,err := service.GetArticleRecordList(0,15)
-	if err !=nil {
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+	articleRecordList, err := service.GetArticleRecordList(0, 15)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
 
 	//2.加载分类数据
-	categoryList,err := service.GetALLCategoryList()
-	if err !=nil {
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+	categoryList, err := service.GetALLCategoryList()
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
-	c.HTML(http.StatusOK,"views/index.html",gin.H{
-		"article_list": articleRecordList,
-		"category_list":categoryList,
+	c.HTML(http.StatusOK, "views/index.html", gin.H{
+		"article_list":  articleRecordList,
+		"category_list": categoryList,
 	})
 
 }
 
 //点击分类云进行分类
-func CategoryList(c *gin.Context){
+func CategoryList(c *gin.Context) {
 	categoryIDStr := c.Query("category_id")
 	//转int
-	categoryID,err := strconv.ParseInt(categoryIDStr,110,64)
-	if err !=nil {
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+	categoryID, err := strconv.ParseInt(categoryIDStr, 110, 64)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
 	//根据分类id获取文章列表
-	articleRecordList,err := service.GetArticleRecordListBYID(int(categoryID),0,15)
-	if err !=nil {
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+	articleRecordList, err := service.GetArticleRecordListBYID(int(categoryID), 0, 15)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
 	//再次加载所有分类数据，用于分类云显示
-	categoryList,err:= service.GetALLCategoryList()
-	c.HTML(http.StatusOK,"views/index.html",gin.H{
-		"article_list": articleRecordList,
-		"category_list":categoryList,
+	categoryList, err := service.GetALLCategoryList()
+	c.HTML(http.StatusOK, "views/index.html", gin.H{
+		"article_list":  articleRecordList,
+		"category_list": categoryList,
 	})
 
 }
 
 //ArticleDetail 文章评论
-func ArticleDetail(c *gin.Context){
+func ArticleDetail(c *gin.Context) {
 	articleIdStr := c.Query("article_id")
-	articleId,err := strconv.ParseInt(articleIdStr,10,64)
+	articleId, err := strconv.ParseInt(articleIdStr, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
 	//获取评论详情
-	commentList,err := service.GetCommentList(articleId)
+	commentList, err := service.GetCommentList(articleId)
 	if err != nil {
-		fmt.Printf("get comment list failed,err:%v\n",err)
+		fmt.Printf("get comment list failed,err:%v\n", err)
 	}
 
 	//获取文章详情
-	articleDetail,err := service.GetArticleById(articleId)
+	articleDetail, err := service.GetArticleById(articleId)
 	if err != nil {
-		fmt.Printf("get article detail failed,err:%v\n",err)
+		fmt.Printf("get article detail failed,err:%v\n", err)
 	}
 
 	//获取上一篇文章
-	prev,err := service.GetPrevArticle(articleId)
+	prev, err := service.GetPrevArticle(articleId)
 	if err != nil {
-		fmt.Printf("get prev detail failed,err:%v\n",err)
+		fmt.Printf("get prev detail failed,err:%v\n", err)
 	}
 
 	//获取下一篇文章
-	next,err := service.GetNextArticle(articleId)
+	next, err := service.GetNextArticle(articleId)
 	if err != nil {
-		fmt.Printf("get next detail failed,err:%v\n",err)
+		fmt.Printf("get next detail failed,err:%v\n", err)
 	}
 
 	//获取相关文章
-	categoryId,err := service.GetCategoryId(articleId)
+	categoryId, err := service.GetCategoryId(articleId)
 	if err != nil {
-		fmt.Printf("get  categoryid failed,err:%v\n",err)
+		fmt.Printf("get  categoryid failed,err:%v\n", err)
 	}
-	fmt.Println("分类id:",categoryId)
+	fmt.Println("分类id:", categoryId)
 
-	relativeArticle,err := service.GetArticleRecordListBYID(int(categoryId),0,100)
+	relativeArticle, err := service.GetArticleRecordListBYID(int(categoryId), 0, 100)
 	if err != nil {
-		fmt.Printf("get  detail failed,err:%v\n",err)
+		fmt.Printf("get  detail failed,err:%v\n", err)
 	}
 
 	//获取分类数据
-	categoryList,err := service.GetALLCategoryList()
+	categoryList, err := service.GetALLCategoryList()
 
 	if err != nil {
-		fmt.Printf("get  categoryList failed,err:%v\n",err)
+		fmt.Printf("get  categoryList failed,err:%v\n", err)
 	}
-	
 
-	c.HTML(http.StatusOK,"views/detail.html",gin.H{
-		"comment_list":commentList,
-		"detail":articleDetail,
-		"prev":prev,
-		"next":next,
-		"relative_article":relativeArticle,
-		"category":categoryList,
-		"article_id": articleId,
+	c.HTML(http.StatusOK, "views/detail.html", gin.H{
+		"comment_list":     commentList,
+		"detail":           articleDetail,
+		"prev":             prev,
+		"next":             next,
+		"relative_article": relativeArticle,
+		"category":         categoryList,
+		"article_id":       articleId,
 	})
 }
 
 //增加评论
-func CommentSubmit(c *gin.Context)(){
+func CommentSubmit(c *gin.Context) {
 	comment := c.PostForm("comment")
 	author := c.PostForm("author")
 	articleIdStr := c.PostForm("article_id")
-	articleId,err := strconv.ParseInt(articleIdStr,10,64)
+	articleId, err := strconv.ParseInt(articleIdStr, 10, 64)
 	if err != nil {
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
-	err = service.InsertComment(author,&comment,articleId)
+	err = service.InsertComment(author, &comment, articleId)
 	if err != nil {
-		fmt.Println("service :",err)
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+		fmt.Println("service :", err)
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 		return
 	}
-	url := fmt.Sprintf("/article/detail/?article_id=%d",articleId)
-	c.Redirect(http.StatusMovedPermanently,url)
+	url := fmt.Sprintf("/article/detail/?article_id=%d", articleId)
+	c.Redirect(http.StatusMovedPermanently, url)
+
+}
+
+//投稿
+func NewArticle(c *gin.Context) {
+	categoryList, err := service.GetALLCategoryList()
+	if err != nil {
+		fmt.Println("newarticle :", err)
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
+	}
+	c.HTML(http.StatusOK, "views/post_article.html", categoryList)	
+}
+
+func ArticleSubmit(c *gin.Context){
+	author := c.PostForm("author")
+	title:= c.PostForm("title")
+	categoryId:=c.PostForm("category_id")
+	content:=c.PostForm("content")
+
+	_,err := service.CreateArticle(author,content,title,categoryId)
+	if err !=nil{
+		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+	}
+	c.Redirect(http.StatusMovedPermanently,"/")
+
 
 }
