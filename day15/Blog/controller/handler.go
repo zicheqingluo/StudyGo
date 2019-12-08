@@ -1,11 +1,18 @@
 package controller
 
 import (
+	"path/filepath"
+	"studygo/day15/Blog/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"studygo/day15/Blog/model"
 	"studygo/day15/Blog/service"
+	"github.com/satori/go.uuid"
+	"path"
+	"log"
+	//"path/filepath"
 )
 
 //访问主页的控制器
@@ -144,20 +151,102 @@ func NewArticle(c *gin.Context) {
 		fmt.Println("newarticle :", err)
 		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 	}
-	c.HTML(http.StatusOK, "views/post_article.html", categoryList)	
+	c.HTML(http.StatusOK, "views/post_article.html", categoryList)
 }
 
-func ArticleSubmit(c *gin.Context){
+//提交投稿
+func ArticleSubmit(c *gin.Context) {
 	author := c.PostForm("author")
-	title:= c.PostForm("title")
-	categoryId:=c.PostForm("category_id")
-	content:=c.PostForm("content")
+	title := c.PostForm("title")
+	categoryId := c.PostForm("category_id")
+	content := c.PostForm("content")
 
-	_,err := service.CreateArticle(author,content,title,categoryId)
-	if err !=nil{
-		c.HTML(http.StatusInternalServerError,"views/500.html",nil)
+	_, err := service.CreateArticle(author, content, title, categoryId)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
 	}
-	c.Redirect(http.StatusMovedPermanently,"/")
+	c.Redirect(http.StatusMovedPermanently, "/")
+
+}
+
+//留言
+func NewLeave(c *gin.Context) {
+	leaveList, err := service.GetLeaveList()
+	if err != nil {
+		fmt.Println("newarticle :", err)
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
+	}
+	c.HTML(http.StatusOK, "views/gbook.html", leaveList)
+}
+
+//提交留言
+func LeaveSubmit(c *gin.Context) {
+	userName := c.PostForm("author")
+	email := c.PostForm("email")
+	content := c.PostForm("content")
+	leaveInfo := &model.Leave{
+		Username: userName,
+		Email:    email,
+		Content:  content,
+	}
+	err := service.AddLeave(leaveInfo)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "views/500.html", nil)
+	}
+	c.Redirect(http.StatusMovedPermanently, "/leave/new/")
+
+}
+
+func AboutMe(c *gin.Context){
+	c.HTML(http.StatusOK,"views/about.html","")
+}
+
+// func UploadFile(c *gin.Context){
+// 	file,err := c.FormFile("upload")
+// 	if err != nil {
+// 		fmt.Println("upload",err)
+// 		c.JSON(http.StatusInternalServerError,gin.H{
+// 			"message":err.Error(),
+// 		})
+// 		return
+// 	}
 
 
+// 	rootPath:= utils.GetRootDir()
+// 	exc := path.Ext(file.Filename)
+// 	aaa := uuid.NewV4()
+// 	url := fmt.Sprintf("/static/upload/%s%s",aaa,exc)
+// 	pat := filepath.Join(rootPath,url)
+// 	_ = c.SaveUploadedFile(file,pat)
+// 	c.JSON(http.StatusOK,gin.H{
+// 		"uploaded":"true",
+// 		"url":url,
+// 	})
+
+// }
+
+func UploadFile(c *gin.Context) {
+	// single file
+	file, err := c.FormFile("upload")
+	if err != nil {
+		fmt.Println("load file",err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	log.Println(file.Filename)
+	rootPath := utils.GetRootDir()
+	u2 := uuid.NewV4()
+	ext := path.Ext(file.Filename)
+	url := fmt.Sprintf("/static/upload/%s%s", u2, ext)
+	fmt.Println("file name:",url)
+	dst := filepath.Join(rootPath, url)
+	fmt.Println("路径",dst)
+	// Upload the file to specific dst.
+	_ = c.SaveUploadedFile(file, dst)
+	c.JSON(http.StatusOK, gin.H{
+		"uploaded": true,
+		"url":      url,
+	})
 }

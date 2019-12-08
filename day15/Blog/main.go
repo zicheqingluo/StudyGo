@@ -25,5 +25,9 @@ func main(){
 	router.POST("/comment/submit/",controller.CommentSubmit)
 	router.GET("/article/new/",controller.NewArticle)
 	router.POST("/article/submit/",controller.ArticleSubmit)
-	_ = router.Run(":8000")
+	router.GET("/leave/new/",controller.NewLeave)
+	router.POST("/leave/submit/",controller.LeaveSubmit)
+	router.GET("/about/me/",controller.AboutMe)
+	router.POST("/upload/file/",controller.UploadFile)
+	_ = router.Run(":8080")
 }
